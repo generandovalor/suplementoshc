@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HC Fitness | Ganaclientes System</title>
+    <meta name="description" content="Catálogo modular conectado a Google Sheets con backend intermedio y soporte para crecimiento." />
+    <link rel="icon" href="/favicon.ico" />
+  </head>
+  <body class="bg-white text-gray-900 dark:bg-slate-950 dark:text-white">
+    <div id="loadingState" class="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-4">
+      <div class="text-center">
+        <div class="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-hc-neon"></div>
+        <p class="mt-4 text-sm font-bold text-gray-500 dark:text-gray-300">Conectando catálogo...</p>
+      </div>
+    </div>
+
+    <div id="appShell" class="hidden">
+      <header class="border-b border-gray-200 bg-white/90 backdrop-blur dark:border-white/10 dark:bg-slate-950/90">
+        <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-5">
+          <div>
+            <p id="brandName" class="text-2xl font-black uppercase tracking-tight">HC Fitness</p>
+            <p id="brandSubtitle" class="text-sm text-gray-500 dark:text-gray-300">Catálogo conectado a Sheets</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="themeToggle" class="btn-secondary">Tema</button>
+            <span id="wholesaleBadge" class="hidden rounded-full bg-hc-purple px-3 py-1 text-xs font-black text-white">Mayorista activo</span>
+            <button id="openWholesale" class="btn-secondary">Mayorista</button>
+            <button id="openCart" class="btn-primary">Carrito (0)</button>
+          </div>
+        </div>
+      </header>
+
+      <main id="app" class="mx-auto max-w-6xl space-y-10 px-4 py-8">
+        <section id="heroSection" class="hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-black">Destacados</h1>
+          </div>
+          <div id="heroSlides" class="grid gap-5 md:grid-cols-2"></div>
+        </section>
+
+        <section class="space-y-5 rounded-3xl border border-gray-200 bg-gray-50 p-6 dark:border-white/10 dark:bg-white/5">
+          <div>
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-hc-purple dark:text-hc-neon">Embudo de decisión</p>
+            <h2 class="mt-2 text-3xl font-black">Encuentra lo que realmente vende</h2>
+            <p class="mt-2 max-w-2xl text-sm text-gray-600 dark:text-gray-300">Frontend modular, filtros por objetivo, soporte mayorista y catálogo conectado a snapshots.</p>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-3">
+            <button class="filter-btn rounded-2xl border border-gray-200 bg-white p-4 text-left font-black dark:border-white/10 dark:bg-slate-950" data-filter="goal" data-value="VOLUMEN">💪 Subir masa</button>
+            <button class="filter-btn rounded-2xl border border-gray-200 bg-white p-4 text-left font-black dark:border-white/10 dark:bg-slate-950" data-filter="goal" data-value="DEFINICION">🔥 Quemar grasa</button>
+            <button class="filter-btn rounded-2xl border border-gray-200 bg-white p-4 text-left font-black dark:border-white/10 dark:bg-slate-950" data-filter="goal" data-value="SALUD">❤️ Salud integral</button>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-2">
+            <div class="space-y-3">
+              <p class="text-xs font-black uppercase tracking-[0.2em] text-gray-400">Nivel</p>
+              <div class="flex flex-wrap gap-2">
+                <button class="filter-btn rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-bold dark:border-white/10 dark:bg-slate-950" data-filter="level" data-value="PRINCIPIANTE">Principiante</button>
+                <button class="filter-btn rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-bold dark:border-white/10 dark:bg-slate-950" data-filter="level" data-value="INTERMEDIO">Intermedio</button>
+                <button class="filter-btn rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-bold dark:border-white/10 dark:bg-slate-950" data-filter="level" data-value="AVANZADO">Avanzado</button>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <p class="text-xs font-black uppercase tracking-[0.2em] text-gray-400">Uso</p>
+              <div class="flex flex-wrap gap-2">
+                <button class="filter-btn rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-bold dark:border-white/10 dark:bg-slate-950" data-filter="use" data-value="ANTES DE ENTRENAR">Antes de entrenar</button>
+                <button class="filter-btn rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-bold dark:border-white/10 dark:bg-slate-950" data-filter="use" data-value="DESPUES DE ENTRENAR">Después de entrenar</button>
+                <button class="filter-btn rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-bold dark:border-white/10 dark:bg-slate-950" data-filter="use" data-value="USO DIARIO">Uso diario</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div class="flex flex-wrap gap-2">
+              <button class="filter-btn rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-bold dark:border-white/10 dark:bg-slate-950" data-filter="tag" data-value="OFERTAS">Ofertas</button>
+              <button class="filter-btn rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-bold dark:border-white/10 dark:bg-slate-950" data-filter="tag" data-value="RECOMENDADOS">Top ventas</button>
+              <button class="filter-btn rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-bold dark:border-white/10 dark:bg-slate-950" data-filter="tag" data-value="URGENCIA">Últimos</button>
+            </div>
+            <div class="flex gap-3">
+              <input id="searchInput" class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm dark:border-white/10 dark:bg-slate-950 md:min-w-[320px]" placeholder="Buscar producto, marca o categoría" />
+              <button id="resetFilters" class="btn-secondary">Limpiar</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="wholesalePanel" class="hidden rounded-3xl bg-slate-900 p-5 text-white shadow-floating">
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="rounded-2xl bg-white/5 p-4">
+              <p class="text-xs uppercase tracking-wide text-gray-400">Fuente</p>
+              <p class="mt-2 text-sm font-bold">Login protegido por Netlify Function</p>
+            </div>
+            <div class="rounded-2xl bg-white/5 p-4">
+              <p class="text-xs uppercase tracking-wide text-gray-400">Precio</p>
+              <p class="mt-2 text-sm font-bold">Usa precio mayorista en catálogo y carrito</p>
+            </div>
+            <div class="rounded-2xl bg-emerald-500/90 p-4 text-black">
+              <p class="text-xs uppercase tracking-wide">Objetivo</p>
+              <p class="mt-2 text-sm font-black">Sin secretos expuestos en cliente</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-black">Productos</h2>
+          </div>
+          <div id="productsGrid" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3"></div>
+        </section>
+
+        <section class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-black">Combos</h2>
+          </div>
+          <div id="combosGrid" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3"></div>
+        </section>
+      </main>
+
+      <footer class="border-t border-gray-200 py-10 dark:border-white/10">
+        <div class="mx-auto flex max-w-6xl flex-col gap-8 px-4 md:flex-row md:justify-between">
+          <div>
+            <p class="text-lg font-black">Legal</p>
+            <div id="footerLinks" class="mt-3 flex flex-col gap-2 text-sm text-gray-600 dark:text-gray-300"></div>
+          </div>
+          <div>
+            <p class="text-lg font-black">Redes</p>
+            <div id="socials" class="mt-3 flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <dialog id="wholesaleModal" class="w-full max-w-md rounded-3xl border border-gray-200 p-0 shadow-2xl backdrop:bg-black/60 dark:border-white/10 dark:bg-slate-950">
+      <form id="wholesaleForm" method="dialog" class="space-y-4 p-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-black">Acceso mayorista</h2>
+          <button type="button" id="closeWholesale" class="btn-secondary">Cerrar</button>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-300">La clave ya no vive en el frontend. Se valida desde Netlify Functions.</p>
+        <input name="code" type="password" required class="w-full rounded-xl border border-gray-200 px-4 py-3 dark:border-white/10 dark:bg-slate-900" placeholder="Código mayorista" />
+        <button class="btn-primary w-full" type="submit">Validar acceso</button>
+      </form>
+    </dialog>
+
+    <dialog id="productModal" class="w-full max-w-5xl rounded-3xl border border-gray-200 p-0 shadow-2xl backdrop:bg-black/60 dark:border-white/10 dark:bg-slate-950">
+      <div class="p-6">
+        <div class="mb-4 flex items-center justify-between">
+          <h2 class="text-xl font-black">Detalle del producto</h2>
+          <button id="closeProductModal" class="btn-secondary">Cerrar</button>
+        </div>
+        <div id="productModalBody"></div>
+      </div>
+    </dialog>
+
+    <dialog id="cartDrawer" class="ml-auto h-screen w-full max-w-md border-l border-gray-200 p-0 shadow-2xl backdrop:bg-black/60 dark:border-white/10 dark:bg-slate-950">
+      <div class="flex h-full flex-col">
+        <div class="flex items-center justify-between border-b border-gray-200 p-5 dark:border-white/10">
+          <h2 class="text-xl font-black">Carrito</h2>
+          <button id="closeCart" class="btn-secondary">Cerrar</button>
+        </div>
+        <div id="cartItems" class="flex-1 space-y-3 overflow-y-auto p-5"></div>
+        <div class="border-t border-gray-200 p-5 dark:border-white/10">
+          <div class="mb-4 flex items-center justify-between">
+            <span class="font-bold">Total</span>
+            <span id="cartTotal" class="text-xl font-black">$0</span>
+          </div>
+          <button id="clearCart" class="btn-secondary w-full">Vaciar carrito</button>
+        </div>
+      </div>
+    </dialog>
+
+    <script type="module" src="/src/js/app.js"></script>
+  </body>
+</html>

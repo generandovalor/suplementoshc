@@ -1,0 +1,27 @@
+[build]
+  base = "frontend"
+  command = "npm install && npm run build"
+  publish = "dist"
+  functions = "../netlify/functions"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[redirects]]
+  from = "/api/catalog"
+  to = "/.netlify/functions/api-catalog"
+  status = 200
+
+[[redirects]]
+  from = "/api/auth"
+  to = "/.netlify/functions/api-auth"
+  status = 200
+
+[[redirects]]
+  from = "/api/health"
+  to = "/.netlify/functions/api-health"
+  status = 200
