@@ -26,8 +26,12 @@ export function bindDom() {
 
 export function renderShell() {
   const business = state.payload?.initData?.negocio || {};
-  dom.brand.textContent = business.NOMBRE_NEGOCIO || 'Ganaclientes System';
-  dom.subtitle.textContent = business.CIUDAD_BASE || 'Catálogo conectado a Sheets';
+  if (dom.brand) {
+    dom.brand.textContent = business.NOMBRE_NEGOCIO || 'Ganaclientes System';
+  }
+  if (dom.subtitle) {
+    dom.subtitle.textContent = business.CIUDAD_BASE || 'Catálogo conectado a Sheets';
+  }
   renderHero();
   renderFooter();
   toggleWholesaleUI();
@@ -127,18 +131,24 @@ function handleCartClick(event) {
 }
 
 export function renderCart() {
-  dom.cartList.innerHTML = state.cart.map((item) => `
-    <div class="flex items-center justify-between gap-3 rounded-xl border border-gray-200 p-3 dark:border-white/10">
-      <div>
-        <p class="font-bold text-gray-900 dark:text-white">${escapeHtml(item.name)}</p>
-        <p class="text-sm text-gray-500 dark:text-gray-400">${item.qty} x $${formatPrice(item.price)}</p>
+  if (dom.cartList) {
+    dom.cartList.innerHTML = state.cart.map((item) => `
+      <div class="flex items-center justify-between gap-3 rounded-xl border border-gray-200 p-3 dark:border-white/10">
+        <div>
+          <p class="font-bold text-gray-900 dark:text-white">${escapeHtml(item.name)}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">${item.qty} x $${formatPrice(item.price)}</p>
+        </div>
+        <button class="text-sm font-bold text-red-500" data-remove-cart="${item.id}">Quitar</button>
       </div>
-      <button class="text-sm font-bold text-red-500" data-remove-cart="${item.id}">Quitar</button>
-    </div>
-  `).join('');
+    `).join('');
+  }
   const total = state.cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  dom.cartTotal.textContent = `$${formatPrice(total)}`;
-  dom.cartButton.textContent = `Carrito (${state.cart.reduce((sum, item) => sum + item.qty, 0)})`;
+  if (dom.cartTotal) {
+    dom.cartTotal.textContent = `$${formatPrice(total)}`;
+  }
+  if (dom.cartButton) {
+    dom.cartButton.textContent = `Carrito (${state.cart.reduce((sum, item) => sum + item.qty, 0)})`;
+  }
 }
 
 function openProductModal(id) {
@@ -192,6 +202,7 @@ export function toggleWholesaleUI() {
 }
 
 function renderHero() {
+  if (!dom.hero || !dom.heroSection) return;
   const items = (state.payload?.initData?.hero || []).filter((item) => String(item.ACTIVO || '').toUpperCase() === 'SI');
   if (!items.length) {
     dom.heroSection.classList.add('hidden');
@@ -210,6 +221,7 @@ function renderHero() {
 }
 
 function renderFooter() {
+  if (!dom.footerLinks || !dom.socials) return;
   const links = state.payload?.initData?.politicas || [];
   const socials = state.payload?.initData?.redes || [];
   dom.footerLinks.innerHTML = links
